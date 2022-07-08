@@ -7,17 +7,17 @@ public class Main {
     static char[][] star;
     static void print_star(int x, int y, int len){
         // 종료조건
-        if(len == 3){
+        if(len == 1){
             star[x][y] = '*';
-            star[x+1][y] = '*';
-            star[x+2][y] = '*';
-
-            star[x][y+1] = '*';
-            star[x+2][y+1] = '*';
-
-            star[x][y+2] = '*';
-            star[x+1][y+2] = '*';
-            star[x+2][y+2] = '*';
+//            star[x+1][y] = '*';
+//            star[x+2][y] = '*';
+//
+//            star[x][y+1] = '*';
+//            star[x+2][y+1] = '*';
+//
+//            star[x][y+2] = '*';
+//            star[x+1][y+2] = '*';
+//            star[x+2][y+2] = '*';
 
             return;
         }
@@ -54,7 +54,6 @@ public class Main {
         //(3)배열 별 출력하기
         StringBuilder sb = new StringBuilder();
         for(int i=0; i<n; i++){
-            //size-i 로 안 하고 size로만 하면 뒤에 빈 값들이 나와서 출력 형태가 잘못된 것이라고 나옴
             for(int j=0; j<n; j++){
                 sb.append(star[i][j]);
             }
