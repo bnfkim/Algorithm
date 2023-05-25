@@ -5,32 +5,29 @@ import java.util.*;
 
 class Main{
     /**
-     * 11:20 -
+     * 11:20 - 11:37
      */
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
-        boolean[] visit = new boolean[n+1];
 
-        int result = 0;
+        System.out.println(solve(n, k));
+    }
+    private static int solve(int n, int k){
         int cnt = 0;
-        boolean flag = false;
+        boolean[] visit = new boolean[n+1];
+        
         for(int i=2; i<=n; i++) {
             for(int j=i; j<=n; j+=i) {
-                if(cnt == k) {
-                    flag = true;
-                    break;
-                }
-                if(!visit[j]) {
+                if(!visit[j]){
                     cnt++;
-                    result = j;
-                    visit[j]  = true;
+                    visit[j] = true;
                 }
+                if(cnt==k) return j;
             }
-            if (flag) break;
         }
-        System.out.println(result);
+        return -1;
     }
 }
