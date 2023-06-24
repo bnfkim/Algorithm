@@ -6,22 +6,20 @@ class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str = br.readLine();
-        //입력받은 숫자문자이 0-9 각 숫자가 몇개로 조합됐는지 확인
+        int[] num = new int[10];
         int sum = 0;
-        int[] numArr = new int[10];
-        for(int i=0; i<str.length(); i++){
-            int num = Integer.parseInt(str.substring(i, i+1));
-            numArr[num]++;
-            sum += num;
+        for(int i=0; i<str.length(); i++) {
+            int n = str.charAt(i) - '0';
+            num[n]++;
+            sum += n;
         }
-        //30의 배수가 되는 조건이 안 되면 -1 반환
-        if(!str.contains("0") || sum%3!=0) System.out.println(-1);
-        else { //가장 큰수이므로, 큰수부터 다시 재배열
+        if(!str.contains("0") || sum%3 != 0) System.out.println(-1);
+        else {
             StringBuilder sb = new StringBuilder();
             for(int i=9; i>=0; i--) {
-                while(numArr[i]>0) {
+                while(num[i] > 0) {
                     sb.append(i);
-                    numArr[i]--;
+                    num[i]--;
                 }
             }
             System.out.println(sb);
