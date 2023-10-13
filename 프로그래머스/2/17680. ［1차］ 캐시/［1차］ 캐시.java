@@ -11,16 +11,12 @@ class Solution {
             //대소문자 구분하지 않기 위해 toUpperCase() 사용
             String city = cities[i].toUpperCase();
             
-            if(cache.remove(city)) {
-                answer += 1;
-                cache.add(city);
-            } else {
+            if(cache.remove(city)) answer += 1;
+            else {
                 answer += 5;
-                if(cache.size() >= cacheSize) {
-                    cache.remove(0);
-                }
-                cache.add(city);
+                if(cache.size() >= cacheSize) cache.remove(0);
             }
+            cache.add(city);
         }
         return answer;
     }
