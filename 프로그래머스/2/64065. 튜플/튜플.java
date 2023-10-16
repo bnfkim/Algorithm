@@ -2,47 +2,24 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String s) {
-        
-        ArrayList<ArrayList<Integer>> groups = parsing(s);
-        
+        //집합 원소 만들기
+        String[] arr = s.replaceAll("[{]", " ").replaceAll("[}]", " ").trim().split(" , ");
+
         //크기대로 정렬하기
-        Collections.sort(groups, new Comparator<ArrayList<Integer>>() {
-            @Override
-            public int compare(ArrayList<Integer> list1, ArrayList<Integer> list2) {
-                return list1.size() - list2.size();
-            }
+        Arrays.sort(arr, (a,b) -> {
+            return a.length() - b.length();
         });
         
-        //하나씩 List에 넣기
-        ArrayList<Integer> answerList = new ArrayList<>();
-        for(ArrayList<Integer> group : groups) {
-            for(int item : group) {
-                if(!answerList.contains(item)) answerList.add(item);
+        //중복 값을 제거하지만 순서를 유지하기 위해 hashSet 사용
+        //set.add() 메소드를 사용하여, 추가가 되면 true를 반환
+        Set<String> set = new HashSet<>();
+        int[] answer = new int[arr.length];
+        int idx = 0;
+        for(String str : arr) {
+            for(String st : str.split(",")) {
+                if(set.add(st)) answer[idx++] = Integer.parseInt(st);
             }
         }
-        //list > arr로 바꾸기
-        int[] answer = new int[answerList.size()];
-        for(int i=0; i<answerList.size(); i++) answer[i] = answerList.get(i);
-
         return answer;
-    }
-    
-    public static ArrayList<ArrayList<Integer>> parsing(String s) {
-        //바깥 중괄호 제거하기
-        s = s.substring(2, s.length()-2);
-        
-        //그룹 분리하기
-        String[] strArr = s.split("\\},\\{");
-        
-        //문자열로 되어있는 원소 정수형으로 바꿔주기
-        ArrayList<ArrayList<Integer>> groups = new ArrayList<>();
-        for(String str : strArr){
-            ArrayList<Integer> list = new ArrayList<>();
-            String[] items = str.split(",");
-            for(String item : items) list.add(Integer.parseInt(item));
-            groups.add(list);
-        }
-        
-        return groups;
     }
 }
