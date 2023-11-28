@@ -3,42 +3,43 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Main{
-    static int H, W;
-    static int[] block;
+class Main {
     public static void main(String[] args) throws IOException {
-        /**
-         * 풀이방법
-         * - 생각의 전환으로 진행
-         * - 현재 내가 있는 인덱스 내에서 얼마나 고일 수 있는지만 체크
-         */
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        H = Integer.parseInt(st.nextToken()); //세로
-        W = Integer.parseInt(st.nextToken()); //가로
+        int H = Integer.parseInt(st.nextToken()); //높이
+        int W = Integer.parseInt(st.nextToken()); //가로
 
-        block = new int[W];
+        int[] height = new int[W];
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<block.length; i++) block[i] = Integer.parseInt(st.nextToken());
+        for(int i=0; i<W; i++) {
+            height[i] = Integer.parseInt(st.nextToken());
+        }
 
-        int result = 0;
-        for(int i=1; i<W-1; i++){
-            int left = 0;
-            int right = 0;
+        int volume = getVolume(W, height);
+        System.out.println(volume);
+    }
 
-            //왼쪽 블럭 찾기
-            for(int j=0; j<i; j++){
-                left = Math.max(block[j], left);
-            }
-            //오른쪽 블럭 찾기
-            for(int j=i+1; j<W; j++) {
-                right = Math.max(block[j], right);
-            }
+    private static int getVolume(int W, int[] height) {
+        int volume = 0; // 빗물 총량
 
-            if(block[i]<left && block[i]<right) {
-                result += Math.min(left,right) - block[i];
+        int left = 0;
+        int right = W -1;
+        int leftMax = height[0];
+        int rightMax = height[W -1];
+
+        while(left < right) {
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+
+            if(leftMax <= rightMax) {
+                volume += leftMax - height[left];
+                left++;
+            } else {
+                volume += rightMax - height[right];
+                right--;
             }
         }
-        System.out.println(result);
+        return volume;
     }
 }
