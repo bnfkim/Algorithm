@@ -1,71 +1,66 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-class Node {
-    int x;
-    int y;
-    public Node(int y, int x) {
-        this.y = y;
-        this.x = x;
-    }
-}
-
-class Main {
+public class Main {
     public static int w, h;
-    public static int result;
     public static int[][] map;
     public static boolean[][] visit;
-    public static int[] dx = {1, 0, -1, 0, 1, 1, -1, -1};
-    public static int[] dy = {0, 1, 0, -1, 1, -1, 1, -1};
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        while(true) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+    public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static StringTokenizer st;
+
+    public static void main(String[] args) throws IOException {
+        while (true) {
+            st = new StringTokenizer(br.readLine());
             w = Integer.parseInt(st.nextToken());
             h = Integer.parseInt(st.nextToken());
-
             if(w==0 && h==0) break;
 
-            map = new int[h+1][w+1];
-            visit = new boolean[h+1][w+1];
-            result = 0;
-            for(int i=1; i<=h; i++) {
-                st = new StringTokenizer(br.readLine());
-                for(int j=1; j<=w; j++) {
-                    map[i][j] = Integer.parseInt(st.nextToken());
-                }
-            }
-            for(int i=1; i<=h; i++) {
-                for(int j=1; j<=w; j++) {
-                    if(map[i][j] == 1 && !visit[i][j]) {
-                        //System.out.println("시작 -> (" + j + "," + i + ")");
-                        result++;
-                        dfs(i, j);
-                    }
-                }
-            }
-            sb.append(result);
-            System.out.println(result);
+            System.out.println(solution());
         }
     }
-    public static void dfs(int y, int x) {
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(new Node(y, x));
+    public static int solution() throws IOException {
+        //지도 만들기
+        map = new int[h][w];
+        visit = new boolean[h][w];
+        for(int i=0; i<h; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for(int j=0; j<w; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        int result = 0;
+        for(int i=0; i<h; i++) {
+            for(int j=0; j<w; j++) {
+                if(!visit[i][j] && map[i][j] == 1) {
+                    bfs(i, j);
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void bfs(int y, int x) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{y,x});
         visit[y][x] = true;
 
+        int[] dx = {1, 0, -1, 0, 1, 1, -1, -1};
+        int[] dy = {0, 1, 0, -1, 1, -1, 1, -1};
+
         while(!queue.isEmpty()) {
-            Node node = queue.poll();
+            int[] position = queue.poll();
             for(int i=0; i<8; i++) {
-                int nextY = node.y + dy[i];
-                int nextX = node.x + dx[i];
+                int ny = position[0] + dy[i];
+                int nx = position[1] + dx[i];
 
-                if(nextY<1 || nextY>h || nextX<1 || nextX>w) continue;
-                if(map[nextY][nextX] == 0 || visit[nextY][nextX]) continue;
+                if(ny<0 || nx<0 || ny>=h || nx>=w) continue;
+                if(visit[ny][nx] || map[ny][nx] == 0) continue;
 
-                visit[nextY][nextX] = true;
-                queue.add(new Node(nextY, nextX));
+                queue.add(new int[]{ny,nx});
+                visit[ny][nx] = true;
             }
         }
     }
