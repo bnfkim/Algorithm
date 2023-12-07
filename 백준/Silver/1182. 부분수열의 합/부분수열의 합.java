@@ -1,54 +1,36 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-
+import java.io.*;
+import java.math.BigInteger;
+import java.util.*;
 
 public class Main {
-    private static int count = 0;
-    private static int N; //정수의 개수
-    private static int S; //정수의 합
-    private static int[] arr;
-
-
+    public static int n,s;
+    public static int cnt = 0;
+    public static int[] nums;
     public static void main(String[] args) throws IOException {
-
-        /**
-         *  입력)
-         *  첫째 줄 -> 수의 개수를 나타내는 N과 정수 S가 주어진다.
-         *  둘째 줄 -> N개의 정수가 빈 칸을 사이에 두고 주어진다.
-         *  출력)
-         *  첫째 줄에 합이 S가 되는 부분수열의 개수를 출력한다.
-         */
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken()); //정수의 개수
+        s = Integer.parseInt(st.nextToken()); //정수
 
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-
-        N = Integer.parseInt(st.nextToken());
-        S = Integer.parseInt(st.nextToken());
-        arr = new int[N];
-
-        st = new StringTokenizer(br.readLine(), " ");
-        for(int i=0; i<N; i++){
-            arr[i] = Integer.parseInt(st.nextToken());
+        nums = new int[n];
+        st = new StringTokenizer(br.readLine());
+        for(int i=0; i<n; i++) {
+            nums[i] = Integer.parseInt(st.nextToken());
         }
-
-        dfs(0,0);
+        dfs(0, 0);
         
-        if(S==0) System.out.println(count - 1);
-        else System.out.println(count);
+        System.out.println((s==0) ? cnt-1 : cnt);
     }
-
-    private static void dfs(int depth, int sum) {
-        if(N == depth) {
-            if (S == sum) count++;
+    public static void dfs(int dep, int sum) {
+        //모든 탐색 경로를 매번 결과에 추가;
+        if(dep == n) {
+            if(sum == s) {
+                cnt++;
+            }
             return;
         }
-        // 해당 인덱스를 더하거나 or 더하지 않거나
-        // 이 과정을 계속 반복해서 S와 값이 같아지는 경우에만 체크
-        dfs(depth+1, sum + arr[depth]);
-        dfs(depth+1, sum);
+
+        dfs(dep+1, sum + nums[dep]); //해당 값을 더하거나
+        dfs(dep+1, sum); //해당 값을 더하지 않거나
     }
 }
