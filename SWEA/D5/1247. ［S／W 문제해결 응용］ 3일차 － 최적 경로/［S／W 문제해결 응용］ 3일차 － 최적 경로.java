@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 class Node {
@@ -15,7 +13,6 @@ class Node {
 
 class Solution {
     public static int n;
-
     public static Node home;
     public static Node company;
     public static Node[] customers;
@@ -45,19 +42,19 @@ class Solution {
             }
 
             min = Integer.MAX_VALUE;
-            makePermutation(company.x, company.y, 0, 0);
+            makePermutation(company, 0, 0);
 
             sb.append("#").append(tc).append(" ").append(min).append("\n");
         }
         System.out.println(sb);
     }
-    public static void makePermutation(int nowX, int nowY, int cnt, int sum) {
-        if(sum > min) { //가지치기 : 길이가 최솟값 보다 커지면 바로 리턴
+    public static void makePermutation(Node now, int cnt, int sum) {
+        if(sum > min) { //길이가 최솟값 보다 커지면 바로 리턴
             return;
         }
 
         if(cnt == n) { //집을 모두 방문 했을 경우 -> 집으로 복귀
-            sum += Math.abs(home.y - nowY) + Math.abs(home.x - nowX);
+            sum += getDistance(now, home);
             min = Math.min(sum, min);
             return;
         }
@@ -66,18 +63,11 @@ class Solution {
             if(visited[i]) continue; //방문한 집일 경우 패스
 
             visited[i] = true;
-            int nextX = customers[i].x;
-            int nextY = customers[i].y;
-
-            int distance = Math.abs(nextY - nowY) + Math.abs(nextX - nowX);
-            makePermutation(nextX, nextY, cnt+1, sum+distance);
-
+            makePermutation(customers[i], cnt+1, sum+getDistance(now, customers[i]));
             visited[i] = false;
         }
-
     }
     public static int getDistance(Node n1, Node n2) {
         return Math.abs(n1.y - n2.y) + Math.abs(n1.x - n2.x);
     }
-
 }
