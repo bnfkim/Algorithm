@@ -1,57 +1,69 @@
 import java.util.*;
+import java.lang.*;
+import java.io.*;
 
+// The main method must be in a class named "Main".
 class Main {
-    static int n, m, v;
-    static ArrayList<ArrayList<Integer>> graph;
-    static boolean[] dfsV;
-    static boolean[] bfsV;
-    static StringBuilder sb = new StringBuilder();
-    public static void main(String[] args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt(); //정점의 개수
-        m = sc.nextInt(); //간선의 개수
-        v = sc.nextInt(); //시작번호
-        graph = new ArrayList<>();
-        dfsV = new boolean[n+1];
-        bfsV = new boolean[n+1];
+    public static int n, m, v;
+    public static int[][] map;
+    public static boolean[] visit;
+    public static StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        //그래프 만들기
-        for(int i=0; i<=n; i++) graph.add(new ArrayList<>());
-        for(int i=0; i<m; i++){
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            graph.get(a).add(b);
-            graph.get(b).add(a);
+        n = Integer.parseInt(st.nextToken()); //정점의 개수
+        m = Integer.parseInt(st.nextToken()); //간선의 개수
+        v = Integer.parseInt(st.nextToken()); //시작할 정점의 번호
+
+        map = new int[n+1][n+1];
+        visit = new boolean[n+1];
+
+        for(int i=0; i<m; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            map[a][b] = 1;
+            map[b][a] = 1;
         }
-        //조건 : 작은 수 부터 탐색
-        for (ArrayList<Integer> node : graph) Collections.sort(node);
         dfs(v);
-        sb.append("\n");
         bfs();
-        System.out.println(sb);
-    }
-    public static void dfs(int v) {
 
-        dfsV[v] = true;
-        sb.append(v).append(" ");
-        for(int i=0; i<graph.get(v).size(); i++){
-            int node = graph.get(v).get(i);
-            if(!dfsV[node]) dfs(node);
+        System.out.println(sb.toString());
+    }
+
+    public static void dfs(int now) {
+        sb.append(now).append(" ");
+        visit[now] = true;
+
+        for(int i=1; i<=n; i++) {
+            if(map[now][i] == 0) continue; //연결이 안 되어있으면 패스
+            if(visit[i]) continue; //방문했으면 패스
+
+            visit[i] = true;
+            dfs(i);
         }
     }
+
     public static void bfs() {
+        sb.append("\n");
+        visit = new boolean[n+1];
         Queue<Integer> queue = new LinkedList<>();
-        queue.offer(v);
-        bfsV[v] = true;
-        while(!queue.isEmpty()) {
-            int node = queue.poll();
-            sb.append(node).append(" ");
-            for(int i=0; i<graph.get(node).size(); i++){
-                int tmp = graph.get(node).get(i);
-                if(!bfsV[tmp]) {
-                    queue.offer(tmp);
-                    bfsV[tmp] = true;
-                }
+        queue.add(v);
+        visit[v] = true;
+
+        while (!queue.isEmpty()) {
+            int now = queue.poll();
+            sb.append(now).append(" ");
+
+            for(int i=1; i<=n; i++) {
+                if(map[now][i] == 0) continue; //연결이 안 되어있으면 패스
+                if(visit[i]) continue; //방문했으면 패스
+
+                queue.add(i);
+                visit[i] = true;
             }
         }
     }
