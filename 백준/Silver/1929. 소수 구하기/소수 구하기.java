@@ -1,29 +1,36 @@
-import org.w3c.dom.Node;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Main{
+public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        //에라토스테네스 체 이용해서 미리 소수 구해놓기
-        boolean[] isNotPrime = new boolean[1000000];
-        isNotPrime[0] = true;
-        isNotPrime[1] = true;
-        for(int i=2; i<isNotPrime.length; i++) {
-            for(int j=i*2; j<isNotPrime.length; j+=i) {
-                isNotPrime[j] = true;
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int[] arr = new int[1_000_001];
+
+        //에라토스테네스의 체
+
+        //(1) 배열 초기화
+        for(int i=2; i<arr.length; i++) {
+            arr[i] = i;
+        }
+
+        //(2) 2부터 시작해서 특정 수의 배수에 해당하는 수는 모두 지움
+        for(int i=2; i<arr.length; i++) {
+            if(arr[i] == 0) continue; //이미 지워진 수라면 패스
+
+            for(int j=i*2; j<arr.length; j+=i) {
+                arr[j] = 0; //소수가 아닌 수는 0 으로 지움
             }
         }
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-
-        for(int i=n; i<=m; i++){
-            if(!isNotPrime[i]) System.out.println(i);
+        for(int i=M; i<=N; i++) {
+            //0이 아닌 수 = 소수인 수
+            if(arr[i]!=0) System.out.println(arr[i]);
         }
     }
 }
