@@ -7,25 +7,17 @@ public class Main {
 
     static int k;
     static String[] sign;
-    static int[] nums;
-    static boolean[] visit;
     static ArrayList<String> results = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        //9까지 있는 boolean 배열을 하나. (idx=숫자, value=사용여부)
-        //숫자 값을 넣을 int 배열 하나
-        //결과 값을 집어넣을 String 배열 하나
-        //완전 탐색 bf + 재귀 + 백트래킹
-
         //입력받기
         k = Integer.parseInt(br.readLine());
         sign = br.readLine().split(" ");
 
-        nums = new int[k+1]; //숫자저장 배열
-        Arrays.fill(nums, -1);
-        visit = new boolean[10];
+        int[] nums = new int[k+1]; //숫자저장 배열
+        boolean[] visit = new boolean[10];
 
         insert(0, nums, visit);
 
@@ -37,7 +29,7 @@ public class Main {
 
         //종료조건1
         if(idx == k+1) {
-            results.add(intArrToString(nums));
+            results.add(convertString(nums));
             return;
         }
 
@@ -53,15 +45,15 @@ public class Main {
                 }
             }
 
-            visit[i] = true; //방문한 것으로 변경
-            nums[idx] = i; //숫자 배열에 숫자 넣음
+            visit[i] = true;
+            nums[idx] = i;
             insert(idx+1, nums, visit);
             nums[idx] = 0;
             visit[i] = false;
         }
     }
 
-    static String intArrToString (int[] nums) {
+    static String convertString(int[] nums) {
         StringBuilder sb = new StringBuilder();
         for(int num : nums) {
             sb.append(num);
