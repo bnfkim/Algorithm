@@ -1,58 +1,75 @@
-import java.util.Scanner;
-class Solution {
-    public static void main(String args[]) throws Exception{
-        Scanner sc = new Scanner(System.in);
-        int T=sc.nextInt();
-        for (int tc = 1; tc <= T; tc++) {
-            System.out.println("#" + tc);
-            int n = sc.nextInt();
-            int[][] arr = new int[n+1][n+1];
-            boolean[][] visit = new boolean[n+1][n+1];
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-            int add = 1; //1씩 증가하는 숫자
-            int top = 1;
-            int left = 1;
-            int bottom = n;
-            int right = n;
-            while(add <= n*n) {
-                //(1)오른쪽
-                for(int i=left; i<n+1; i++){
-                    if(visit[top][i]) continue;
-                    arr[top][i] = add;
-                    visit[top][i] = true;
-                    add++;
+public class Solution {
+    static int N;
+    static int[][] arr;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine());
+        for(int tc=1; tc<=T; tc++) {
+
+            N = Integer.parseInt(br.readLine());
+            arr = new int[N][N];
+
+            int num = 1;
+            int x = 0;
+            int y = 0;
+            int d = 0;
+
+            int top = 0;
+            int right = N;
+            int bottom = N;
+            int left = 0;
+
+            while(num <= N*N) {
+                arr[y][x] = num;
+                
+                if(d%4 == 0) x++;
+                else if (d%4 == 1) y++;
+                else if (d%4 == 2) x--;
+                else if (d%4 == 3) y--;
+
+                if(x>=right) {
+                    x--;
+                    y++;
+                    top++;
+                    d++;
                 }
-                top++;
-                //(2)아래쪽
-                for(int i=top; i<n+1; i++) {
-                    if(visit[i][right]) continue;
-                    arr[i][right] = add;
-                    visit[i][right] = true;
-                    add++;
+                if(y>=bottom) {
+                    y--;
+                    x--;
+                    right--;
+                    d++;
                 }
-                right--;
-                //(3)왼쪽
-                for(int i=right; i>0; i--){
-                    if(visit[bottom][i]) continue;
-                    arr[bottom][i] = add;
-                    visit[bottom][i] = true;
-                    add++;
+                if(x<left) {
+                    x++;
+                    y--;
+                    bottom--;
+                    d++;
                 }
-                bottom--;
-                //(4)위쪽
-                for(int i=bottom; i>0; i--){
-                    if(visit[i][left]) continue;
-                    arr[i][left] = add;
-                    visit[i][left] = true;
-                    add++;
+                if(y<top) {
+                    y++;
+                    x++;
+                    left++;
+                    d++;
                 }
-                left++;
+
+                if(d==4) d = 0;
+                num++;
             }
-
-            for(int i=1; i<=n; i++){
-                for(int j=1; j<=n; j++) System.out.print(arr[i][j] + " ");
-                System.out.println();
+            sb.append("#").append(tc).append("\n");
+            for(int i=0; i<N; i++) {
+                for(int j=0; j<N; j++){
+                    sb.append(arr[i][j] + " ");
+                }
+                sb.append("\n");
             }
         }
+        System.out.println(sb);
     }
 }
