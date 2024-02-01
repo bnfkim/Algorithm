@@ -1,30 +1,50 @@
-import java.util.Scanner;
-class Solution {
-    public static void main(String[] args) throws Exception     {
-        Scanner sc = new Scanner(System.in);
-        int T = sc.nextInt();
-        for (int tc = 1; tc <= T; tc++){
-            int n = sc.nextInt();
-            int m = sc.nextInt();
-            int[][] arr = new int[n][n];
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-            for(int i=0; i<n; i++){
-                for(int j=0; j<n; j++) arr[i][j] = sc.nextInt();
-            }
-            int max = 0;
-            //필요한 조건 : 파리채가 배열 밖으로 나가지 않게
-            for(int i=0; i<n-m+1; i++){ //배열 오른쪽 이동칸수
-                for(int j=0; j<n-m+1; j++){ //배열 아래쪽 이동칸수
-                    int sum = 0;
-                    for(int y=0; y<m; y++){ //파리채 오른쪽 이동칸수
-                        for(int x=0; x<m; x++){ //파리채 아래쪽 이동칸수
-                            sum += arr[i+y][j+x];
-                        }
-                    }
-                    max = Math.max(sum, max);
+public class Solution {
+
+    static int N, M;
+    static int[][] map;
+    static StringBuilder sb = new StringBuilder();
+    static StringTokenizer st;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine());
+
+        for(int tc=1; tc<=T; tc++) {
+            st = new StringTokenizer(br.readLine());
+            N = Integer.parseInt(st.nextToken()); //배열크기
+            M = Integer.parseInt(st.nextToken()); //파리채 크기
+
+            map = new int[N][N];
+
+            for(int i=0; i<N; i++) {
+                st = new StringTokenizer(br.readLine());
+                for(int j=0; j<N; j++) {
+                    map[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
-            System.out.println("#" + tc + " " + max);
+
+            int result = 0;
+            for(int i=0; i<=N-M; i++) {
+                for(int j=0; j<=N-M; j++) {
+                    result = Math.max(result, getFries(j, i));
+                }
+            }
+            sb.append("#").append(tc).append(" ").append(result).append("\n");
         }
+        System.out.println(sb);
+    }
+
+    static int getFries(int x, int y) {
+        int sum = 0;
+        for(int i=0; i<M; i++) {
+            for(int j=0; j<M; j++) {
+                sum += map[y+i][x+j];
+            }
+        }
+        return sum;
     }
 }
