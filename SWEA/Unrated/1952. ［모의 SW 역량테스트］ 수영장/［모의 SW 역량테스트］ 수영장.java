@@ -15,17 +15,14 @@ public class Solution {
         int T = Integer.parseInt(br.readLine());
 
         for(int tc=1; tc<=T; tc++) {
-            result = Integer.MAX_VALUE;
-
             st = new StringTokenizer(br.readLine());
             for(int i=0; i<4; i++) cost[i] = Integer.parseInt(st.nextToken());
 
             st = new StringTokenizer(br.readLine());
             for(int i=0; i<12; i++) month[i] = Integer.parseInt(st.nextToken());
 
-            /**
-             * 문제풀이
-             */
+            result = cost[3];
+
             dfs(0,0);
             sb.append("#").append(tc).append(" ").append(result).append("\n");
         }
@@ -37,8 +34,6 @@ public class Solution {
 
         if(cnt >= 12) {
             //System.out.println("열두달 도착 !");
-            //System.out.println(sum);
-            result = Math.min(cost[3], sum); //1년 이용권과 비교
             result = Math.min(result, sum);
             return;
         }
