@@ -1,39 +1,44 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.StringTokenizer;
 
-class Solution
-{
-    public static void main(String args[])
-    {
-        Scanner sc = new Scanner(System.in);
-        
-        for(int test_case = 1; test_case <= 10; test_case++)
-        {
-            int T = sc.nextInt();
-            Queue<Integer> q = new LinkedList<>();
-            for(int i=0; i<8; i++) q.add(sc.nextInt());
+public class Solution {
+
+    static Deque<Integer> deque;
+    static StringTokenizer st;
+    static StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int T = 10;
+        while(T-->0) {
+            int tc = Integer.parseInt(br.readLine());
+
+            deque = new ArrayDeque<>();
+            st = new StringTokenizer(br.readLine());
+            for(int i=0; i<8; i++) {
+                deque.add(Integer.parseInt(st.nextToken()));
+            }
 
             int idx = 1;
             while(true) {
+                int first = deque.pollFirst();
+                //System.out.println("first = " + first);
+                if(first - idx <= 0) break;
 
-                int item = q.poll();
-                int num = item - idx;
-                if(num <= 0) {
-                    num = 0;
-                    q.add(num);
-                    break;
-                }
-                q.add(num);
-
-                if(idx == 5) idx = 0;
+                deque.addLast(first-idx);
                 idx++;
-            }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("#").append(T).append(" ");
-            while(!q.isEmpty()){
-                sb.append(q.poll()).append(" ");
+                if(idx == 6) idx = 1;
             }
-            System.out.println(sb.toString());
+            deque.addLast(0);
+            sb.append("#").append(tc).append(" ");
+            while(!deque.isEmpty()) sb.append(deque.pollFirst() + " ");
+            sb.append("\n");
         }
+        System.out.println(sb);
     }
 }
