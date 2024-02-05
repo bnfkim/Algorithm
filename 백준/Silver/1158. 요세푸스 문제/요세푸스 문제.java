@@ -1,39 +1,33 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-
-    public static void main(String[] args) throws IOException {
-
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-
         StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-        int N = Integer.parseInt(st.nextToken()); //사람 수
-        int K = Integer.parseInt(st.nextToken()); //순서
+        LinkedList<Integer> linkedList = new LinkedList<>();
 
-        Queue<Integer> queue = new LinkedList<>();
-
-        //사람의 수 만큼 원소 넣기
-        for(int i=0; i<N; i++){
-            queue.offer(i+1);
+        for(int i=1; i<=N; i++) {
+            linkedList.add(i);
         }
 
-        sb.append("<");
+        int idx = 1;
+        while(!linkedList.isEmpty()) {
+            int person = linkedList.poll();
 
-        while (queue.size() != 1){
-            for (int i = 0; i<K-1; i++){
-                queue.offer(queue.poll());
-            }
-            sb.append(queue.poll()).append(", ");
+            if(idx % K == 0) sb.append(person).append(", ");
+            else linkedList.add(person);
+            
+            idx++;
         }
 
-        sb.append(queue.poll()).append(">");
-        System.out.println(sb);
+        sb.insert(0, "<");
+        sb.replace(sb.length()-2, sb.length()-1, ">");
+
+        System.out.println(sb.toString());
     }
 }
