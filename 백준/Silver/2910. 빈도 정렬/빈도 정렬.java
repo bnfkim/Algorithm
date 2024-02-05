@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.Map.*;
 
-class Number implements Comparable<Number> {
+class Number {
     int num;
     int cnt;
     int idx;
@@ -13,14 +13,6 @@ class Number implements Comparable<Number> {
         this.num = num;
         this.cnt = cnt;
         this.idx = idx;
-    }
-
-    @Override
-    public int compareTo(Number o) {
-        if (this.cnt == o.cnt) {
-            return this.idx - o.idx;
-        }
-        return o.cnt - this.cnt;
     }
 }
 public class Main {
@@ -33,32 +25,38 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int C = Integer.parseInt(st.nextToken());
 
-        Map<Integer, Number> map = new HashMap<>();
+        HashMap<Integer, Number> map = new HashMap<>();
 
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
+        for(int i=0; i<N; i++) {
             int num = Integer.parseInt(st.nextToken());
 
-            if (map.containsKey(num)) {
+            if(map.containsKey(num)) {
                 map.get(num).cnt++;
             } else {
                 map.put(num, new Number(num, 1, i));
             }
         }
 
-        PriorityQueue<Number> pq = new PriorityQueue<>();
-        for (Number number : map.values()) {
-            pq.add(number);
-        }
+        PriorityQueue<Number> pq = new PriorityQueue<>(new Comparator<Number>() {
+            @Override
+            public int compare(Number o1, Number o2) {
+                if(o1.cnt == o2.cnt) {
+                    return o1.idx - o2.idx;
+                }
+                return o2.cnt - o1.cnt;
+            }
+        });
+
+        pq.addAll(map.values());
 
         StringBuilder sb = new StringBuilder();
-        while (!pq.isEmpty()) {
+        while(!pq.isEmpty()) {
             Number number = pq.poll();
-            for (int i = 0; i < number.cnt; i++) {
+            for(int i=0; i<number.cnt; i++) {
                 sb.append(number.num).append(" ");
             }
         }
-
         System.out.println(sb.toString().trim());
     }
 }
