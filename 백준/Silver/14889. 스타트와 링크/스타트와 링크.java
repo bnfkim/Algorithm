@@ -45,17 +45,17 @@ public class Main {
     }
 
     static int getResult() {
-        int team1 = 0;
-        int team2 = 0;
+        int start = 0;
+        int link = 0;
 
         for(int i=1; i<=N; i++) {
             for(int j=1; j<=N; j++) {
                 if(i == j) continue;
 
-                if(check[i] && check[j]) team1 += board[i][j];
-                if(!check[i] && !check[j]) team2 += board[i][j];
+                if(check[i] && check[j]) start += board[i][j];
+                if(!check[i] && !check[j]) link += board[i][j];
             }
         }
-        return Math.abs(team1 - team2);
+        return Math.abs(start - link);
     }
 }
