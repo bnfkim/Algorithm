@@ -1,73 +1,61 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static int n;
-    public static int result = Integer.MAX_VALUE;
-    public static int[][] arr;
-    public static boolean[] visit;
+
+    static int N;
+    static boolean[] check;
+    static int[][] board;
+    static StringTokenizer st;
+
+    static int MIN_RESULT = Integer.MAX_VALUE;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));;
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine()); //축구를 하기 위해 모인 사람
+        N = Integer.parseInt(br.readLine());
+        check = new boolean[N+1];
+        board = new int[N+1][N+1];
 
-        visit = new boolean[n];
-        arr = new int[n][n];
-
-        for(int i=0; i<n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for(int j=0; j<n; j++) {
-                arr[i][j] = Integer.parseInt(st.nextToken());
+        for(int i=1; i<=N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for(int j=1; j<=N; j++) {
+                board[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        dfs(0,0);
-        //결과 : 스타트 팀과 링크 팀의 능력치 차이의 최솟값
-        System.out.println(result);
+
+        combination(0, 1);
+        System.out.println(MIN_RESULT);
     }
 
-    public static void dfs(int start, int dep) {
-        //팀 조합이 완성될 경우
-        if(dep == n/2) {
-            cal();
+    static void combination(int dep, int start) {
+        if(dep == N/2) {
+            MIN_RESULT = Math.min(MIN_RESULT, getResult());
             return;
         }
 
-        for(int i=start; i<n; i++) {
-            if(!visit[i]) {
-                visit[i] = true;
-                dfs(i+1, dep+1);
-                visit[i] = false;
-            }
+        for(int i=start; i<=N; i++) {
+
+            check[i] = true;
+            combination(dep+1, i+1);
+            check[i] = false;
         }
     }
-    public static void cal() {
-        //(1) 방문한 팀과 방문 하지 않은 팀을 나누기
-        int start = 0;
-        int link = 0;
 
-        //(2) 각 팀의 점수를 구하기
-        for (int i=0; i<n-1; i++) {
-            for (int j=i+1; j<n; j++) {
-                // i 번째 사람과 j 번째 사람이 true라면 스타트팀으로 점수 플러스
-                if (visit[i] && visit[j]) {
-                    start += arr[i][j];
-                    start += arr[j][i];
-                }
-                // i 번째 사람과 j 번째 사람이 false라면 링크팀으로 점수 플러스
-                else if (!visit[i] && !visit[j]) {
-                    link += arr[i][j];
-                    link += arr[j][i];
-                }
+    static int getResult() {
+        int team1 = 0;
+        int team2 = 0;
+
+        for(int i=1; i<=N; i++) {
+            for(int j=1; j<=N; j++) {
+                if(i == j) continue;
+
+                if(check[i] && check[j]) team1 += board[i][j];
+                if(!check[i] && !check[j]) team2 += board[i][j];
             }
         }
-        // 두 팀의 점수 차이 (절댓값)
-        int gap = Math.abs(start - link);
-
-        //(3) 최솟값 찾기
-        if(gap == 0) {
-            System.out.println(gap);
-            System.exit(0);
-        }
-
-        result = Math.min(gap, result);
+        return Math.abs(team1 - team2);
     }
 }
