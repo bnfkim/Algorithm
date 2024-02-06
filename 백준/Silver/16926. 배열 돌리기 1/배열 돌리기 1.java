@@ -34,31 +34,33 @@ public class Main {
     static void solve() {
         int min = Math.min(N, M)/2;
 
-        int cnt = 0;
-        while(cnt != R) {
+        for(int i=0; i<min; i++) {
+            int cnt = R % (((N - 2 * i) + (M - 2 * i)) * 2 - 4);
+            rotate(i, cnt);
+        }
+    }
 
-            for(int i=0; i<min; i++) {
-                int x = i;
-                int y = i;
-                int tmp = arr[y][x];
+    static void rotate(int idx, int cnt) {
+        for(int r = 0; r < cnt; r++) {
+            int x = idx;
+            int y = idx;
+            int tmp = arr[y][x];
 
-                int dir = 0;
-                while (dir < 4) {
-                    int nx = x + dx[dir];
-                    int ny = y + dy[dir];
+            int dir = 0;
+            while (dir < 4) {
+                int nx = x + dx[dir];
+                int ny = y + dy[dir];
 
-                    if (nx < i || ny < i || nx >= M - i || ny >= N - i) {
-                        dir++; //범위에 벗어나면 방향 바꿈
-                        continue;
-                    }
-
-                    arr[y][x] = arr[ny][nx];
-                    y = ny;
-                    x = nx;
+                if (nx < idx || ny < idx || nx >= M - idx || ny >= N - idx) {
+                    dir++; //범위에 벗어나면 방향 바꿈
+                    continue;
                 }
-                arr[i + 1][i] = tmp;
+
+                arr[y][x] = arr[ny][nx];
+                y = ny;
+                x = nx;
             }
-            cnt++;
+            arr[idx + 1][idx] = tmp;
         }
     }
     static void print() {
