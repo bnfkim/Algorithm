@@ -1,24 +1,27 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
-class Main{
+public class Main {
     public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int cnt = 0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
 
-        //봉지는 3킬로그램과 5킬로만 있음
-        while(true){
-            if(n%5 == 0) {
-                System.out.println(n / 5 + cnt);
+        int cnt = 0;
+        while (true) {
+            if(n % 5 == 0) {
+                cnt += n / 5;
                 break;
             }
-            if(n<0){
-                System.out.println(-1);
+
+            if(n < 0) {
+                cnt = -1;
                 break;
             }
+
             n -= 3;
             cnt++;
         }
+        System.out.println(cnt);
     }
 }
