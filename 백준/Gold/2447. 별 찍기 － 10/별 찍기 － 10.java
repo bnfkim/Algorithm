@@ -9,18 +9,9 @@ public class Main {
         // 종료조건
         if(len == 1){
             star[x][y] = '*';
-//            star[x+1][y] = '*';
-//            star[x+2][y] = '*';
-//
-//            star[x][y+1] = '*';
-//            star[x+2][y+1] = '*';
-//
-//            star[x][y+2] = '*';
-//            star[x+1][y+2] = '*';
-//            star[x+2][y+2] = '*';
-
             return;
         }
+        
         // 1/3으로 줄인 크기만큼 똑같이 만듬
         int new_len = len/3;
         print_star(x, y, new_len);
@@ -28,7 +19,6 @@ public class Main {
         print_star(x + new_len*2, y, new_len);
 
         print_star(x, y + new_len, new_len);
-        //print_star(x, y+ new_len, new_len);
         print_star(x + new_len*2, y + new_len, new_len);
 
         print_star(x, y + new_len*2, new_len);
