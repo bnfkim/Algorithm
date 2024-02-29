@@ -95,14 +95,24 @@ public class Solution {
     }
     public static void move() {
 
-        Iterator<Microbe> iterator = microbeList.iterator();
-        while(iterator.hasNext()){
-            Microbe microbe = iterator.next();
+        ArrayList<Microbe> newMicrobeList = new ArrayList<>();
+        for(Microbe microbe : microbeList) {
             map[microbe.r][microbe.c].remove(microbe);
             microbe.r += dr[microbe.d];
             microbe.c += dc[microbe.d];
             map[microbe.r][microbe.c].add(microbe);
+            newMicrobeList.add(microbe);
         }
+        microbeList = newMicrobeList;
+
+//        Iterator<Microbe> iterator = microbeList.iterator();
+//        while(iterator.hasNext()){
+//            Microbe microbe = iterator.next();
+//            map[microbe.r][microbe.c].remove(microbe);
+//            microbe.r += dr[microbe.d];
+//            microbe.c += dc[microbe.d];
+//            map[microbe.r][microbe.c].add(microbe);
+//        }
 
 //        for(Microbe microbe : microbeList) {
 //            //1시간마다 이동방향에 있는 다음 셀로 이동
@@ -114,15 +124,29 @@ public class Solution {
     }
 
     public static void checkDieZone() {
-        Iterator<Microbe> iterator = microbeList.iterator();
-        while(iterator.hasNext()){
-            Microbe microbe = iterator.next();
+
+        ArrayList<Microbe> newMicrobeList = new ArrayList<>();
+        for (Microbe microbe : microbeList) {
             if(inDieZone(microbe.r, microbe.c)) {
                 microbe.n /= 2; //(1-1) 미생물의 절반이 죽음
                 microbe.d = changeDirection(microbe.d); //(1-2) 이동 방향 바뀜
-                if(microbe.n == 0) iterator.remove(); //(1-3) 미생물 수 =  0 -> 군집 사라짐
+                if(microbe.n != 0) newMicrobeList.add(microbe); //(1-3) 미생물 수 !=  0 -> 군집 유지
+            } else {
+                newMicrobeList.add(microbe);
             }
         }
+        microbeList = newMicrobeList;
+        
+        
+//        Iterator<Microbe> iterator = microbeList.iterator();
+//        while(iterator.hasNext()){
+//            Microbe microbe = iterator.next();
+//            if(inDieZone(microbe.r, microbe.c)) {
+//                microbe.n /= 2; //(1-1) 미생물의 절반이 죽음
+//                microbe.d = changeDirection(microbe.d); //(1-2) 이동 방향 바뀜
+//                if(microbe.n == 0) iterator.remove(); //(1-3) 미생물 수 =  0 -> 군집 사라짐
+//            }
+//        }
 
 //        for (Microbe microbe : microbeList) {
 //            if(inDieZone(microbe.r, microbe.c)) {
