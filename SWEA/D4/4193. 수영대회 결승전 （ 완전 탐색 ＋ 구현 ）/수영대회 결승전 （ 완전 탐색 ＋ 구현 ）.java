@@ -54,9 +54,8 @@ public class Solution {
             int x = cur[1];
             int t = cur[2];
 
-            if(x == ex && y == ey) {
-                return t;
-            }
+            //도착
+            if(x == ex && y == ey) return t;
 
             for (int i = 0; i < 4; i++) {
                 int ny = y + dy[i];
@@ -64,19 +63,15 @@ public class Solution {
 
                 if(ny < 0 || nx < 0 || ny >= N || nx >= N) continue;
                 if(map[ny][nx] == 1 || visit[ny][nx]) continue;
-
-                if(map[ny][nx] == 2) {
-                    if((t-2) % 3 == 0) {
-                        deque.add(new int[]{ny, nx, t + 1});
-                    } else {
-                        deque.add(new int[]{y, x, t + 1});
-                    }
-                } else {
-                    deque.add(new int[]{ny, nx, t + 1});
-                    visit[ny][nx] = true;
+                
+                //소용돌이를 만났지만, 아직 못 지나가는 경우 -> 제자리 기다림
+                if(map[ny][nx] == 2 && (t-2) % 3 != 0) {
+                    deque.add(new int[]{y, x, t + 1});
+                    continue;
                 }
 
-
+                deque.add(new int[]{ny, nx, t + 1});
+                visit[ny][nx] = true;
             }
         }
         return -1;
