@@ -1,23 +1,25 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
-    public static int result = 0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String S = br.readLine();
         String T = br.readLine();
 
-        while (S.length() < T.length()) {
-            StringBuilder sb = new StringBuilder();
-            if (T.endsWith("A")) {
-                T = T.substring(0, T.length() - 1);
-            } else if (T.endsWith("B")) {
-                T = T.substring(0, T.length() - 1);
-                T = sb.append(T).reverse().toString();
+        System.out.println(canTransform(S, T) ? 1 : 0);
+    }
+
+    private static boolean canTransform(String S, String T) {
+        StringBuilder sbT = new StringBuilder(T);
+
+        while (S.length() < sbT.length()) {
+            if (sbT.charAt(sbT.length() - 1) == 'B') {
+                sbT.deleteCharAt(sbT.length() - 1);
+                sbT.reverse();
+            } else {
+                sbT.deleteCharAt(sbT.length() - 1);
             }
         }
-        if(S.equals(T)) System.out.println(1);
-        else System.out.println(0);
+        return S.equals(sbT.toString());
     }
 }
