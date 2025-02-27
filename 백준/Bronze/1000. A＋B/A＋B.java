@@ -1,10 +1,18 @@
 import java.util.*;
-public class Main{
-    public static void main(String args[]){
-        Scanner sc = new Scanner(System.in);
-        int A, B;
-        A = sc.nextInt();
-        B = sc.nextInt();
-        System.out.println(A + B);
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        // 코드를 작성해주세요
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int a = Integer.parseInt(st.nextToken());
+        int b = Integer.parseInt(st.nextToken());
+        
+        int result = a + b;
+        System.out.println(result);
+        
+        
     }
-}  
+}
