@@ -1,15 +1,16 @@
-import java.util.*;
-
 class Solution {
     boolean solution(String s) {
-        int cnt = 0;        
         s = s.toUpperCase();
+        char[] chArr = s.toCharArray();
         
-        for(int i = 0; i< s.length(); i++) {
-            if(s.charAt(i) == 'P') cnt++;
-            else if(s.charAt(i) == 'Y') cnt--;
+        int pCnt = 0;
+        int yCnt = 0;
+        
+        for(int i=0; i<chArr.length; i++){
+            if(chArr[i] =='P') pCnt++;
+            if(chArr[i] =='Y') yCnt++;
         }
 
-        return cnt == 0;
+        return pCnt==yCnt;
     }
 }
