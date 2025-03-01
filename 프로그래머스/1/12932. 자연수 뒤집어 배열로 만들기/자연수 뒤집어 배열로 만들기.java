@@ -1,14 +1,11 @@
-import java.util.*;
-import java.io.*;
-
 class Solution {
     public int[] solution(long n) {
-        StringBuilder sb = new StringBuilder(String.valueOf(n));
-        String str = sb.reverse().toString();
+        int len = Long.toString(n).length();
         
-        int[] answer = new int[str.length()];
-        for(int i = 0; i < str.length(); i++) {
-            answer[i] = str.charAt(i) - '0';
+        int[] answer = new int[len];
+        for(int i=0; i<len; i++){
+            answer[i] = (int)(n%10);
+            n /= 10;
         }
         return answer;
     }
