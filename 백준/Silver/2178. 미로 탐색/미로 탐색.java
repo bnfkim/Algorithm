@@ -1,57 +1,59 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-class Node{
-    int x;
-    int y;
-    Node(int y, int x){
-        this.y = y;
+class Node {
+    int x, y;
+    public Node(int x, int y){
         this.x = x;
+        this.y = y;
     }
 }
 
-class Main{
-    static int n,m;
-    static String[][] arr;
+public class Main {
+    static int N, M;
+    static String[][] map;
     static int[][] visit;
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, 1, 0, -1};
+    static StringTokenizer st;
+    
+    static int[] dx = {0, 0, -1, 1};
+    static int[] dy = {-1, 1, 0, 0};
+    
     public static void main(String[] args) throws IOException {
+        // 코드를 작성해주세요
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        arr = new String[n][m];
-        visit = new int[n][m];
-        //배열 입력받기
-        for(int i=0; i<n; i++) arr[i] = br.readLine().split("");
+        StringBuilder sb = new StringBuilder();
+        
+        st = new StringTokenizer(br.readLine(), " ");
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        
+        map = new String[N][M];
+        visit = new int[N][M];
+        for(int i=0; i<N; i++) map[i] = br.readLine().split("");
         bfs();
-        System.out.println(visit[n-1][m-1]);
+        System.out.println(visit[N-1][M-1]);
     }
-    private static void bfs() {
-        Queue<Node> queue = new LinkedList<>();
-        queue.offer(new Node(0,0));
+    
+    public static void bfs() {
+        Queue<Node> q = new LinkedList<>();
+        q.offer(new Node(0,0));
         visit[0][0] = 1;
-
-        while(!queue.isEmpty()) {
-            Node node = queue.poll();
+        
+        while(!q.isEmpty()){
+            Node node = q.poll();
             int nowX = node.x;
             int nowY = node.y;
-
+            
             for(int i=0; i<4; i++){
                 int nextX = nowX + dx[i];
                 int nextY = nowY + dy[i];
-                //배열 범위 벗어나지 않도록
-                if(nextX<0 || nextX>=m || nextY<0 || nextY>=n) continue;
-                //갈 수 있는 곳만 가야함 && 방문하지 않은 곳만 가야함
-                if(arr[nextY][nextX].equals("1") && visit[nextY][nextX] == 0) {
-                    queue.offer(new Node(nextY, nextX));
-                    visit[nextY][nextX] = visit[nowY][nowX] + 1;
-                }
+                            
+                if(nextX<0 || nextY<0 || nextX >= M || nextY >= N) continue;
+                if(map[nextY][nextX].equals("0")) continue;
+                if(visit[nextY][nextX] != 0) continue;
+                
+                q.offer(new Node(nextX, nextY));
+                visit[nextY][nextX] = visit[nowY][nowX] + 1;
             }
         }
     }
