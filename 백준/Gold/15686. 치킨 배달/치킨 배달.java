@@ -1,80 +1,84 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-class Position {
-    int x;
-    int y;
-    public Position(int x, int y) {
-        this.x = x;
-        this.y = y;
+class Node {
+    int col, row;
+    public Node(int col, int row){
+        this.col = col;
+        this.row = row;
     }
 }
 
 public class Main {
-
+    static StringTokenizer st ;
     static int N, M;
+    static int minDistance = Integer.MAX_VALUE;
     static int[][] map;
-    static boolean[] visited;
-    static ArrayList<Position> chickenList, houseList, selected;
-    static int result = Integer.MAX_VALUE;
-
+    static boolean[] selected;
+    static ArrayList<Node> storeList;
+    static ArrayList<Node> houseList;
+    static ArrayList<Node> selectedStoreList;
+    
     public static void main(String[] args) throws IOException {
+        //(1) 입력받기
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
         st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-
-        visited = new boolean[N];
         map = new int[N][N];
-
-        selected = new ArrayList<>();
-        chickenList = new ArrayList<>();
+        storeList = new ArrayList<>();
         houseList = new ArrayList<>();
-
-        for(int i=0; i<N; i++) {
+        
+        for(int i=0; i<N; i++){
             st = new StringTokenizer(br.readLine());
-            for(int j=0; j<N; j++) {
+            for(int j=0; j<N; j++){
                 map[i][j] = Integer.parseInt(st.nextToken());
-
-                if(map[i][j] == 2) chickenList.add(new Position(j, i));
-                if(map[i][j] == 1) houseList.add(new Position(j, i));
+                
+                if(map[i][j] == 1) houseList.add(new Node(j, i));
+                else if(map[i][j] == 2) storeList.add(new Node(j, i));
             }
         }
-        combination(0, 0);
-        System.out.println(result);
+        selected = new boolean[storeList.size()];
+        
+        //(2) 치킨집 갯수 중 M개 선택하기 -> 조합
+        //배열에 M개 치킨집 위치 담기
+        combine(0, 0);
+        
+        System.out.println(minDistance);
     }
-
-    public static void combination(int dep, int start) {
-        if(dep == M) { //도착했을 때
-            result = Math.min(result, getDistance());
+    
+    public static void combine(int start, int dep) {
+        if(dep == M) { //치킨집 M개 선택했다면
+            selectedStoreList = new ArrayList<>();
+            for(int i=0; i<storeList.size(); i++) {
+                //i번째 치킨집 
+                if(selected[i]) selectedStoreList.add(storeList.get(i));
+            }
+            
+            minDistance = Math.min(minDistance, getMinDistance());
             return;
         }
-
-        for(int i=start; i<chickenList.size(); i++) {
-
-            selected.add(chickenList.get(i));
-            combination(dep+1, i+1);
-            selected.remove(dep);
+        
+        for(int i=start; i<storeList.size(); i++){
+            selected[i] = true;
+            combine(i+1, dep+1);
+            selected[i] = false;
         }
     }
-
-    public static int getDistance() {
-        int distance = 0;
-        for (Position house : houseList) { //집은 5개
-            int sum = Integer.MAX_VALUE;
-
-            for (Position chicken : selected) { //치킨 2개 선택
-                int tmp = Math.abs(house.x - chicken.x) + Math.abs(house.y - chicken.y);
-                sum = Math.min(tmp , sum);
+    
+    public static int getMinDistance(){
+        int distanceSum = 0;
+        for(Node house : houseList) {
+            int distance = Integer.MAX_VALUE;
+            for(Node store : selectedStoreList) {
+                distance = Math.min(distance, getDistance(store, house));
             }
-
-            distance += sum;
+            distanceSum += distance;
         }
-        return distance;
+        return distanceSum;
+    }
+    
+    public static int getDistance(Node store, Node house){
+        return Math.abs(store.col - house.col) + Math.abs(store.row - house.row);
     }
 }
