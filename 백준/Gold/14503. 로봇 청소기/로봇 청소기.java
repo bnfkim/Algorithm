@@ -1,73 +1,96 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-class Main{
-    static StringTokenizer st;
-    static int n,m,r,c,d;
-    static int count = 1;
-    static int[][] arr;
-    static int[] dy = {-1, 0, 1, 0}; //북 동 남 서 순서대로
-    static int[] dx = {0, 1, 0, -1};
-    static int[][] direction = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}; //북 동 남 서 방향
+public class Main {
+    static int R, C;
+    static int[][] map;
+    static int[] robot;
+
+    //0(북), 1(동), 2(남), 3(서)
+    static int[] dr = {-1, 0, 1, 0};
+    static int[] dc = {0, 1, 0, -1};
+
     public static void main(String[] args) throws IOException {
-        /**
-         * 4:30 -
-         */
+        init();
+        System.out.println(cleanRoom());
+    }
+
+    public static void init() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        map = new int[R][C];
+
+        //로봇청소기가 있는 칸의 좌표 / 로봇청소기가 바라보는 방향 d
         st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken()); //세로
-        m = Integer.parseInt(st.nextToken()); //가로
-        arr = new int[n][m];
-        st = new StringTokenizer(br.readLine());
-        r = Integer.parseInt(st.nextToken()); //로봇청소기 x좌표
-        c = Integer.parseInt(st.nextToken()); //로봇청소기 y좌표
-        d = Integer.parseInt(st.nextToken()); //로봇청소기  방향
-        //입력받기
-        for(int i=0; i<n; i++) {
+        robot = new int[3];
+        robot[0] = Integer.parseInt(st.nextToken());
+        robot[1] = Integer.parseInt(st.nextToken());
+        robot[2] = Integer.parseInt(st.nextToken());
+
+        for (int i = 0; i < R; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j=0; j<m; j++) arr[i][j] = Integer.parseInt(st.nextToken());
-        }
-        dfs(r, c, d);
-        System.out.println(count);
-    }
-    private static void dfs(int r, int c, int dir) {
-        //현재 위치 청소
-        arr[r][c] = 2;
-        //현재 방향을 기준으로 왼쪽 방향부터 차례대로 탐색 진행
-        for(int i=0; i<4; i++){
-            dir = (dir+3) % 4; //반 시계방향으로 변환
-            int ny = r + dy[dir];
-            int nx = c + dx[dir];
-
-            //청소가 안 된 곳이 있으면 count++
-            if(ny>=0 && ny<n && nx>=0 && nx<m && arr[ny][nx] == 0) {
-                count++;
-                dfs(ny, nx, dir);
-                //print();
-                return;
+            //0 = 청소X, 1 = 벽, 2 = 청소
+            for (int j = 0; j < C; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-
-        //네 방향 모두 청소가 이미 되어있거나 벽인 경우
-        //바라보는 방향을 유지한 채로 한 칸 후진
-        int back = (dir + 2) % 4;
-        int by = r + dy[back];
-        int bx = c + dx[back];
-
-        if(by>=0 && by<n && bx>=0 && bx<m && arr[by][bx] != 1) {
-            dfs(by, bx, dir);
-        }
     }
-    private static void print() {
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<m; j++){
-                if(arr[i][j] == 2) System.out.print("✦ ");
-                else System.out.print(arr[i][j] + " ");
+
+    public static int cleanRoom() {
+        int cleanCount = 0;
+
+        while(true) {
+            int r = robot[0];
+            int c = robot[1];
+            int d = robot[2];
+
+            //1. 현재 칸이 청소되지 않은 경우 청소
+            if(map[r][c] == 0) {
+                map[r][c] = 2; //청소
+                cleanCount++;
             }
-            System.out.println();
+
+            boolean moved = false;
+
+            //2. 4방향 탐색
+            for (int i = 0; i < 4; i++) {
+                d = (d + 3) % 4;
+                int nr = r + dr[d];
+                int nc = c + dc[d];
+
+                if(outOfRange(nr, nc)) continue;
+
+                //청소가 안 된 곳이면 전진
+                if(map[nr][nc] == 0) {
+                    robot[0] = nr;
+                    robot[1] = nc;
+                    robot[2] = d;
+                    moved = true;
+
+                    break;
+                }
+            }
+
+            //움직일 수 있는 곳이 없다면 후진
+            if(!moved) {
+                int backDir = (d + 2) % 4;
+                int br = r + dr[backDir];
+                int bc = c + dc[backDir];
+
+                if(outOfRange(br, bc) || map[br][bc] == 1) break;
+
+                //방향은 그대로 유지
+                robot[0] = br;
+                robot[1] = bc;
+            }
         }
-        System.out.println();
+        return cleanCount;
+    }
+
+    public static boolean outOfRange(int r, int c) {
+        return (r < 0 || c < 0 || r >=R || c >= C);
     }
 }
